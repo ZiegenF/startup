@@ -1,8 +1,8 @@
-# Your startup name here
+# petVital
 
 [My Notes](notes.md)
 
-A brief description of the application here. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+This app or say webiste will deliver a unique aspect to those who want great health and tracking for their pets!
 
 > [!NOTE]
 > This is a template for your startup application. You must modify this `README.md` file for each phase of your development. You only need to fill in the section for each deliverable when that deliverable is submitted in Canvas. Without completing the section for a deliverable, the TA will not know what to look for when grading your submission. Feel free to add additional information to each deliverable description, but make sure you at least have the list of rubric items and a description of what you did for each item.
@@ -12,37 +12,50 @@ A brief description of the application here. Lorem ipsum dolor sit amet, consect
 
 ### Elevator pitch
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Just like humans track steps, calories, and weight to stay healthy, our pets deserve the same care, but most owners are guessing. **PetVitals** is a simple app for tracking the health of everyday pets (dogs and cats), log daily weight, meals, calories, and activity, get feeding reminders, and watch trends over time with easy-to-read charts. Whether you're managing a picky eater, a pet on a diet, or just want peace of mind that Whiskers is thriving, PetVitals turns guesswork into simple, visual data, right from your phone or browser.
 
 ### Design
 
-![Design image](placeholder.png)
+![petVitals](petVitalspreview.png)
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
-```mermaid
-sequenceDiagram
-    actor You
-    actor Website
-    You->>Website: Replace this with your design
-```
 
 ### Key features
 
-- Describe your key feature
-- Describe your key feature
-- Describe your key feature
+- User registration, login, and logout, with each user managing their own pets
+- Add one or more pets (name, species, breed, age, target weight)
+- Log daily weight entries per pet, with a trend chart over time
+- Log meals/feedings with calorie counts, building a daily calorie total
+- Pull breed-specific info (e.g. typical weight range, temperament) from a public dog/cat breed API
+- Real-time feed showing when other users on the app log a weight entry or feeding, so you can see recent activity across the community
+- Simple dashboard summarizing today's calories, latest weight, and trend vs. target
+
 
 ### Technologies
 
 I am going to use the required technologies in the following ways.
 
-- **HTML** - Description here
-- **CSS** - Description here
-- **React** - Description here
-- **Service** - Description here
-- **DB/Login** - Description here
-- **WebSocket** - Description here
+**HTML**
+Semantic structure for the core views: login/register page, pet dashboard, add/edit pet form, and weight/calorie log entry forms.
+
+**CSS**
+Clean, card-based layout with a calming, pet-friendly color palette; responsive design so it works on both phone and desktop; simple chart styling for weight/calorie trend lines.
+
+**React**
+Single-page application built from components: `LoginForm`, `PetList`, `PetDashboard`, `WeightLogForm`, `MealLogForm`, `ActivityFeed`. React routing switches between login, dashboard, and individual pet detail views, and re-renders the dashboard reactively as new log entries are added.
+
+**Service (backend endpoints)**
+- `POST /auth/register`, `POST /auth/login`, `POST /auth/logout` — secure user authentication
+- `GET/POST /pets` — create and retrieve a user's pets
+- `POST /pets/:id/weight` and `GET /pets/:id/weight` — log and retrieve weight history
+- `POST /pets/:id/meals` and `GET /pets/:id/meals` — log and retrieve feeding/calorie history
+- `GET /breed-info?species=dog&breed=labrador` — proxy call to a third-party breed info API (e.g. [TheDogAPI](https://thedogapi.com/) or [TheCatAPI](https://thecatapi.com/)) to fetch breed characteristics and a reference photo
+
+**Database**
+Stores user credentials (securely hashed), pets, weight log entries, and meal/calorie log entries, all linked by user and pet ID so each owner only sees their own animals' data.
+
+**WebSocket**
+Broadcasts a lightweight, anonymized activity event (e.g. "A user just logged a weight entry for their dog") to all connected clients whenever any user adds a weight or meal log, powering the real-time activity feed on the dashboard.
 
 ## 🚀 Specification Deliverable
 
@@ -51,12 +64,12 @@ I am going to use the required technologies in the following ways.
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] I completed the prerequisites for this deliverable (Git commit requirement)
-- [ ] Proper use of Markdown
-- [ ] A concise and compelling elevator pitch
-- [ ] Description of key features
-- [ ] Description of how you will use each technology including your 3rd party API and use of WebSocket
-- [ ] One or more rough sketches of your application. Images must be embedded in this file using Markdown image references.
+- [x] I completed the prerequisites for this deliverable (Git commit requirement)
+- [x] Proper use of Markdown
+- [x] A concise and compelling elevator pitch
+- [x] Description of key features
+- [x] Description of how you will use each technology including your 3rd party API and use of WebSocket
+- [x] One or more rough sketches of your application. Images must be embedded in this file using Markdown image references.
 
 ## 🚀 AWS deliverable
 
