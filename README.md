@@ -16,7 +16,7 @@ Just like humans track steps, calories, and weight to stay healthy, our pets des
 
 ### Design
 
-![petVitals](<img width="477" height="822" alt="petVitalspreview" src="https://github.com/user-attachments/assets/31560ed2-f42b-4298-8cd5-f2c9a9f1ceec" />)
+<img width="477" height="822" alt="petVitalspreview" src="https://github.com/user-attachments/assets/31560ed2-f42b-4298-8cd5-f2c9a9f1ceec" />
 
 
 
