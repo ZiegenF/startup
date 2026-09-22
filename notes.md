@@ -18,10 +18,10 @@ This file represents what I have learned about web programming.
 - Fixing an instance if its IP address fails
 
 ## HTML
-- Every page needs <!DOCTYPE html>, <head>, and <body>.
-- <header>, <main>, and <footer> give each page a consistent structure.
-- Links between pages use <a href="page.html">. The path is relative to the current file.
-- Forms use <label for="id"> to connect a label to its <input id="id">.
+- Every page needs DOCTYPE html, head, and body.
+- header, main, and footer give each page a consistent structure.
+- Links between pages use a href="page.html". The path is relative to the current file.
+- Forms use label for="id> to connect a label to its input id="id".
 - Images need the exact file path and name, including the extension, or they show as broken.
 - Live Server auto-refreshes the browser every time I save.
 
