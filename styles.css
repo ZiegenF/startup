@@ -1,0 +1,234 @@
+/* ===== PetVitals styles ===== */
+
+/* Colors used across the app */
+:root {
+  --pv-teal: #13897a;       /* green-teal: header, headings */
+  --pv-teal-dark: #0d6659;  /* darker teal: footer, hover */
+  --pv-orange: #3cc08a;     /* bright mint green: buttons, active link */
+  --pv-cream: #e4f2fb;      /* light blue: page background */
+  --pv-text: #1f3b4d;
+}
+
+/* ----- Element selectors ----- */
+body {
+  font-family: 'Nunito', sans-serif; /* imported from Google Fonts */
+  background-color: var(--pv-cream);
+  color: var(--pv-text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column; /* keeps footer at the bottom */
+}
+
+main {
+  flex: 1;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 800;
+}
+
+img {
+  max-width: 100%; /* images never overflow */
+  height: auto;
+}
+
+/* ----- Header and nav (flexbox) ----- */
+header {
+  background-color: var(--pv-teal);
+  color: white;
+}
+
+.header-inner {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 0;
+}
+
+.logo {
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.site-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.site-nav a {
+  color: white;
+  text-decoration: none;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+/* Pseudo selectors */
+.site-nav a:hover {
+  background-color: var(--pv-teal-dark);
+}
+
+.site-nav a.active {
+  background-color: var(--pv-orange);
+}
+
+/* ----- Cards ----- */
+.pv-card {
+  background-color: white;
+  border: none;
+  border-radius: 1rem;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  padding: 1.5rem;
+}
+
+.pv-card h2,
+.pv-card h3 {
+  color: var(--pv-teal);
+}
+
+/* ----- Buttons ----- */
+.btn-pv {
+  background-color: var(--pv-orange);
+  color: white;
+  font-weight: 700;
+  border: none;
+}
+
+.btn-pv:hover {
+  background-color: #2ea574;
+  color: white;
+}
+
+.user-badge {
+  display: inline-block;
+  background-color: white;
+  border-radius: 999px;
+  padding: 0.35rem 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* ----- Hero on the home page ----- */
+.hero {
+  text-align: center;
+  padding: 2.5rem 1rem 1rem;
+}
+
+.hero h2 {
+  font-size: 2.2rem;
+  color: var(--pv-teal);
+}
+
+.github-callout {
+  font-weight: 700;
+  color: var(--pv-orange);
+}
+
+.github-callout:hover {
+  color: var(--pv-teal);
+}
+
+/* ----- Dashboard layout (CSS grid) ----- */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+}
+
+/* ID selector: WebSocket live activity box */
+#live-activity {
+  border-left: 6px solid var(--pv-orange);
+}
+
+#live-activity li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+#live-activity li:last-child {
+  border-bottom: none;
+}
+
+.breed-info {
+  background-color: #e0f5ef;
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+}
+
+/* ----- History table ----- */
+.table thead th {
+  background-color: var(--pv-teal);
+  color: white;
+}
+
+.table tbody tr:nth-child(even) td {
+  background-color: #eef8f5;
+}
+
+.chart-placeholder {
+  border: 2px dashed var(--pv-teal);
+  border-radius: 1rem;
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--pv-teal);
+  text-align: center;
+  padding: 1rem;
+}
+
+/* ----- About page (flexbox) ----- */
+.about-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  align-items: center;
+}
+
+.about-row img {
+  flex: 1 1 280px;
+  max-width: 400px;
+  border-radius: 1rem;
+}
+
+.about-text {
+  flex: 1 1 300px;
+}
+
+/* ----- Footer ----- */
+footer {
+  background-color: var(--pv-teal-dark);
+  color: white;
+  text-align: center;
+  padding: 1rem;
+  margin-top: 2rem;
+}
+
+footer a {
+  color: #a8f0d0;
+  font-weight: 700;
+}
+
+/* ----- Responsive: small screens ----- */
+@media (max-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr; /* stack cards */
+  }
+
+  .header-inner {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .site-nav {
+    justify-content: center;
+  }
+
+  .hero h2 {
+    font-size: 1.6rem;
+  }
+}
