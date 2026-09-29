@@ -75,44 +75,36 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [x] **Rented EC2 server** - I did not complete this part of the deliverable.
-- [x] **Leased domain name** - I did not complete this part of the deliverable.
-- [x] **Server accessible** from my domain: [https://yourdomainnamehere.click](https://yourdomainnamehere.click) - I did not complete this part of the deliverable.
+- [x] **Rented EC2 server** 
+- [x] **Leased domain name** 
+- [x] **Server accessible** from my domain: [https://ziegencs260.click](https://ziegencs260.click)
 
 ## 🚀 HTML deliverable
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [x] I completed the prerequisites for this deliverable (Simon deployed, GitHub link, Git commits)
-- [x] **HTML pages** - I did not complete this part of the deliverable.
-- [x] **Proper HTML element usage** - I did not complete this part of the deliverable.
-- [x] **Links** - I did not complete this part of the deliverable.
-- [x] **Text** - I did not complete this part of the deliverable.
-- [x] **3rd party API placeholder** - I did not complete this part of the deliverable.
-- [x] **Images** - I did not complete this part of the deliverable.
-- [x] **Login placeholder** - I did not complete this part of the deliverable.
-- [x] **DB data placeholder** - I did not complete this part of the deliverable.
-- [x] **WebSocket placeholder** - I did not complete this part of the deliverable.
+- [x] I completed the prerequisites for this deliverable (Simon deployed, GitHub link, Git commits) Simon is deployed to simon.ziegencs260.click, the home page links to my GitHub repo, and I committed my work in small steps. 
+- [x] **HTML pages**- Four pages: index.html (home and login), dashboard.html (pick a pet and log entries), history.html (past log entries), and about.html (what PetVitals is).
+- [x] **Proper HTML element usage**- Every page uses body, header, nav, main, and footer. I also used h1-h3 headings, section, form, label, input, select, button, table (with thead and tbody), ul/li lists, and img.
+- [x] **Links**- A nav bar on every page links to Home, Dashboard, History, and About. The footer on every page links to my GitHub repo. The login form takes the user to the dashboard.
+- [x] **Text** - The home page describes PetVitals as a fitness tracker for your pet. The About page explains the app and lists its main features.
+- [x] **3rd party API placeholder** - The Breed Info section on the dashboard shows a healthy weight range for the selected pet's breed. This will come from a public dog/cat breed API.
+- [x] **Images** - The About page shows a pet photo from images/pet.jpg
+- [x] **Login placeholder** - index.html has a login form with username and password fields and Login and Create account buttons. The dashboard and history pages show "Logged in as: username" where the real username will appear.
+- [x] **DB data placeholder** - The table on history.html shows past weight, meal, and calorie entries. These will be stored in and loaded from the database. The weight trend chart placeholder will also use this data.
+- [x] **WebSocket placeholder** - The Live Activity list on the dashboard shows entries other users log in real time, like "A user just logged a meal for their cat." These will be pushed through WebSocket.
 
 ## 🚀 CSS deliverable
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [x] I completed the prerequisites for this deliverable (Simon deployed, GitHub link, Git commits)
-- [x] **Visually appealing colors and layout. No overflowing elements.** - I did not complete this part of the deliverable.
-- [x] **Use of a CSS framework** - I did not complete this part of the deliverable.
-- [x] **All visual elements styled using CSS** - I did not complete this part of the deliverable.
-- [x] **Responsive to window resizing using flexbox and/or grid display** - I did not complete this part of the deliverable.
-- [x] **Use of a imported font** - I did not complete this part of the deliverable.
-- [x] **Use of different types of selectors including element, class, ID, and pseudo selectors** - I did not complete this part of the deliverable.
-
-- Link a stylesheet with <link rel="stylesheet" href="styles.css">.
-- Bootstrap classes like btn, form-control, and container add styling without custom CSS.
-- display: flex lines items up in a row; flex-wrap lets them wrap on small screens.
-- display: grid with grid-template-columns makes column layouts.
-- @media (max-width: 768px) changes styles on small screens.
-- Selectors: element (body), class (.pv-card), ID (#live-activity), pseudo (a:hover).
-- Google Fonts are imported with a <link> in the head.
+- [x] I completed the prerequisites for this deliverable (Simon deployed, GitHub link, Git commits) - Simon is deployed to simon.ziegencs260.click, the home page has a "View the code on GitHub" link near the top plus one in the footer of every page, and I committed my work in small steps.
+- [x] **Visually appealing colors and layout. No overflowing elements.** - The app uses a teal and green theme with a light blue page background. Content sits in white rounded cards with soft shadows. The layout fits on every screen size: images shrink to fit, and the history table scrolls sideways on small screens instead of overflowing.
+- [x] **Use of a CSS framework** - I linked Bootstrap 5.3.3 from its CDN on every page. I used its container and row/column grid, form classes (form-control, form-select, form-label), buttons (btn, btn-outline-secondary), the table and table-responsive classes, and spacing utilities like mb-3 and py-4.
+- [x] **All visual elements styled using CSS** - Every part of the app is styled in styles.css: the header and nav bar, the logged-in user badge, the cards, the login and log entry forms, the buttons, the breed info box, the Live Activity list, the history table, the chart placeholder, the pet image, and the footer. I removed the old HTML styling attributes (border on the table and width on the image) and moved that styling into CSS.
+- [x] **Responsive to window resizing using flexbox and/or grid display** - The header and nav use flexbox and wrap onto new lines on narrow screens. The About page uses flexbox so the image and text sit side by side on wide screens and stack on small ones. The dashboard uses CSS grid with two columns (the forms and Live Activity) that collapse to one column below 768px with a media query.
+- [x] **Use of an imported font** - I imported Nunito from Google Fonts and applied it to the whole app in the body selector.
+- [x] **Use of different types of selectors including element, class, ID, and pseudo selectors** - Element selectors: body, main, h1, img, header, footer. Class selectors: .pv-card, .site-nav, .btn-pv, .dashboard-grid, .chart-placeholder. ID selector: #live-activity, which gives the WebSocket box an accent border. Pseudo selectors: a:hover for the nav links and buttons, tr:nth-child(even) for striped table rows, and li:last-child to remove the last divider in the Live Activity list.
 
 ## 🚀 React part 1: Routing deliverable
 
