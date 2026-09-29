@@ -75,36 +75,44 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Rented EC2 server** - I did not complete this part of the deliverable.
-- [ ] **Leased domain name** - I did not complete this part of the deliverable.
-- [ ] **Server accessible** from my domain: [https://yourdomainnamehere.click](https://yourdomainnamehere.click) - I did not complete this part of the deliverable.
+- [x] **Rented EC2 server** - I did not complete this part of the deliverable.
+- [x] **Leased domain name** - I did not complete this part of the deliverable.
+- [x] **Server accessible** from my domain: [https://yourdomainnamehere.click](https://yourdomainnamehere.click) - I did not complete this part of the deliverable.
 
 ## 🚀 HTML deliverable
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] I completed the prerequisites for this deliverable (Simon deployed, GitHub link, Git commits)
-- [ ] **HTML pages** - I did not complete this part of the deliverable.
-- [ ] **Proper HTML element usage** - I did not complete this part of the deliverable.
-- [ ] **Links** - I did not complete this part of the deliverable.
-- [ ] **Text** - I did not complete this part of the deliverable.
-- [ ] **3rd party API placeholder** - I did not complete this part of the deliverable.
-- [ ] **Images** - I did not complete this part of the deliverable.
-- [ ] **Login placeholder** - I did not complete this part of the deliverable.
-- [ ] **DB data placeholder** - I did not complete this part of the deliverable.
-- [ ] **WebSocket placeholder** - I did not complete this part of the deliverable.
+- [x] I completed the prerequisites for this deliverable (Simon deployed, GitHub link, Git commits)
+- [x] **HTML pages** - I did not complete this part of the deliverable.
+- [x] **Proper HTML element usage** - I did not complete this part of the deliverable.
+- [x] **Links** - I did not complete this part of the deliverable.
+- [x] **Text** - I did not complete this part of the deliverable.
+- [x] **3rd party API placeholder** - I did not complete this part of the deliverable.
+- [x] **Images** - I did not complete this part of the deliverable.
+- [x] **Login placeholder** - I did not complete this part of the deliverable.
+- [x] **DB data placeholder** - I did not complete this part of the deliverable.
+- [x] **WebSocket placeholder** - I did not complete this part of the deliverable.
 
 ## 🚀 CSS deliverable
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] I completed the prerequisites for this deliverable (Simon deployed, GitHub link, Git commits)
-- [ ] **Visually appealing colors and layout. No overflowing elements.** - I did not complete this part of the deliverable.
-- [ ] **Use of a CSS framework** - I did not complete this part of the deliverable.
-- [ ] **All visual elements styled using CSS** - I did not complete this part of the deliverable.
-- [ ] **Responsive to window resizing using flexbox and/or grid display** - I did not complete this part of the deliverable.
-- [ ] **Use of a imported font** - I did not complete this part of the deliverable.
-- [ ] **Use of different types of selectors including element, class, ID, and pseudo selectors** - I did not complete this part of the deliverable.
+- [x] I completed the prerequisites for this deliverable (Simon deployed, GitHub link, Git commits)
+- [x] **Visually appealing colors and layout. No overflowing elements.** - I did not complete this part of the deliverable.
+- [x] **Use of a CSS framework** - I did not complete this part of the deliverable.
+- [x] **All visual elements styled using CSS** - I did not complete this part of the deliverable.
+- [x] **Responsive to window resizing using flexbox and/or grid display** - I did not complete this part of the deliverable.
+- [x] **Use of a imported font** - I did not complete this part of the deliverable.
+- [x] **Use of different types of selectors including element, class, ID, and pseudo selectors** - I did not complete this part of the deliverable.
+
+- Link a stylesheet with <link rel="stylesheet" href="styles.css">.
+- Bootstrap classes like btn, form-control, and container add styling without custom CSS.
+- display: flex lines items up in a row; flex-wrap lets them wrap on small screens.
+- display: grid with grid-template-columns makes column layouts.
+- @media (max-width: 768px) changes styles on small screens.
+- Selectors: element (body), class (.pv-card), ID (#live-activity), pseudo (a:hover).
+- Google Fonts are imported with a <link> in the head.
 
 ## 🚀 React part 1: Routing deliverable
 
