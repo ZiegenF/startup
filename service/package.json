@@ -1,0 +1,17 @@
+{
+  "name": "startup-service",
+  "version": "1.0.0",
+  "description": "Backend service for PetVitals.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "Ziegen Farley",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cookie-parser": "^1.4.7",
+    "express": "^5.3.0",
+    "uuid": "^11.1.1"
+  }
+}
