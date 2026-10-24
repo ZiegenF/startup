@@ -7,9 +7,10 @@ import { Login } from './login/login';
 import { Dashboard } from './dashboard/dashboard';
 import { History } from './history/history';
 import { About } from './about/about';
+import { logoutAccount } from './petData';
 
 export default function App() {
-  // Logged in user is kept in localStorage until we have a real backend
+  // The service keeps the real login in a cookie. localStorage just remembers the name to show.
   const [userName, setUserName] = React.useState(localStorage.getItem('userName') || '');
   const loggedIn = userName !== '';
 
@@ -19,6 +20,7 @@ export default function App() {
   }
 
   function logout() {
+    logoutAccount().catch(() => {});
     localStorage.removeItem('userName');
     setUserName('');
   }
@@ -39,8 +41,8 @@ export default function App() {
 
       <Routes>
         <Route path="/" element={<Login userName={userName} onLogin={login} onLogout={logout} />} />
-        <Route path="/dashboard" element={loggedIn ? <Dashboard userName={userName} /> : <Navigate to="/" />} />
-        <Route path="/history" element={loggedIn ? <History userName={userName} /> : <Navigate to="/" />} />
+        <Route path="/dashboard" element={loggedIn ? <Dashboard userName={userName} onLogout={logout} /> : <Navigate to="/" />} />
+        <Route path="/history" element={loggedIn ? <History userName={userName} onLogout={logout} /> : <Navigate to="/" />} />
         <Route path="/about" element={<About />} />
         <Route path="*" element={<NotFound />} />
       </Routes>

@@ -1,10 +1,23 @@
 import React from 'react';
 import { loadPets, loadEntries } from '../petData';
 
-export function History({ userName }) {
-  const [pets] = React.useState(() => loadPets(userName));
-  const [entries] = React.useState(() => loadEntries(userName));
-  const [petId, setPetId] = React.useState(pets[0]?.id || '');
+export function History({ userName, onLogout }) {
+  const [pets, setPets] = React.useState([]);
+  const [entries, setEntries] = React.useState([]);
+  const [petId, setPetId] = React.useState('');
+
+  // Load this user's pets and entries from the service
+  React.useEffect(() => {
+    Promise.all([loadPets(), loadEntries()])
+      .then(([pets, entries]) => {
+        setPets(pets);
+        setEntries(entries);
+        setPetId(pets[0]?.id || '');
+      })
+      .catch((err) => {
+        if (err.status === 401) onLogout();
+      });
+  }, []);
 
   const pet = pets.find((p) => p.id === petId);
   const petEntries = entries.filter((entry) => entry.petId === petId);

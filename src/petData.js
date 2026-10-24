@@ -1,39 +1,73 @@
-// Pets and log entries are saved in localStorage for now.
-// These will move to the service and database in later deliverables.
+// Calls to the PetVitals service endpoints.
+// Each function throws an error with the server's message if the call fails.
 
-export function loadPets(userName) {
-  return JSON.parse(localStorage.getItem(`pets_${userName}`) || '[]');
-}
-
-export function savePets(userName, pets) {
-  localStorage.setItem(`pets_${userName}`, JSON.stringify(pets));
-}
-
-export function loadEntries(userName) {
-  return JSON.parse(localStorage.getItem(`entries_${userName}`) || '[]');
-}
-
-export function saveEntries(userName, entries) {
-  localStorage.setItem(`entries_${userName}`, JSON.stringify(entries));
-}
-
-// Mock of the third-party breed API. Waits a moment like a real network call.
-const breedInfo = {
-  'labrador retriever': 'Labrador Retriever: typical weight 55–80 lbs. Friendly and active.',
-  'german shepherd': 'German Shepherd: typical weight 50–90 lbs. Loyal and smart.',
-  'golden retriever': 'Golden Retriever: typical weight 55–75 lbs. Gentle and eager to please.',
-  'beagle': 'Beagle: typical weight 20–30 lbs. Curious and loves food.',
-  'siamese': 'Siamese: typical weight 6–14 lbs. Vocal and social.',
-  'maine coon': 'Maine Coon: typical weight 10–25 lbs. Large and laid-back.',
-  'holland lop': 'Holland Lop: typical weight 2–4 lbs. Calm and friendly.',
-};
-
-export const breedNames = Object.values(breedInfo).map((info) => info.split(':')[0]);
-
-export function fetchBreedInfo(breed) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(breedInfo[breed.trim().toLowerCase()] || `No breed info found for "${breed}".`);
-    }, 500);
+async function callService(url, method = 'GET', body) {
+  const response = await fetch(url, {
+    method,
+    headers: body ? { 'Content-Type': 'application/json' } : undefined,
+    body: body ? JSON.stringify(body) : undefined,
   });
+
+  if (!response.ok) {
+    const data = await response.json().catch(() => ({}));
+    const error = new Error(data.msg || `Request failed (${response.status})`);
+    error.status = response.status;
+    throw error;
+  }
+
+  return response.status === 204 ? null : response.json();
 }
+
+// ----- Auth -----
+
+export function createAccount(email, password) {
+  return callService('/api/auth/create', 'POST', { email, password });
+}
+
+export function loginAccount(email, password) {
+  return callService('/api/auth/login', 'POST', { email, password });
+}
+
+export function logoutAccount() {
+  return callService('/api/auth/logout', 'DELETE');
+}
+
+// ----- Pets and log entries -----
+
+export function loadPets() {
+  return callService('/api/pets');
+}
+
+export function addPet(pet) {
+  return callService('/api/pets', 'POST', pet);
+}
+
+export function loadEntries() {
+  return callService('/api/entries');
+}
+
+export function addEntry(entry) {
+  return callService('/api/entries', 'POST', entry);
+}
+
+// ----- Breed info (the service gets this from dogapi.dog) -----
+
+export async function fetchBreedInfo(breed) {
+  try {
+    const info = await callService(`/api/breed?name=${encodeURIComponent(breed)}`);
+    return `${info.name}: typical weight ${info.minWeight}–${info.maxWeight} lbs, lives ${info.lifeMin}–${info.lifeMax} years. ${info.description}`;
+  } catch (err) {
+    return err.message;
+  }
+}
+
+export const breedNames = [
+  'Labrador Retriever',
+  'German Shepherd',
+  'Golden Retriever',
+  'Beagle',
+  'Bulldog',
+  'Poodle',
+  'Dachshund',
+  'Boxer',
+];

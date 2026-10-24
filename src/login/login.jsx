@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { createAccount, loginAccount } from '../petData';
 
 export function Login({ userName, onLogin, onLogout }) {
   const [name, setName] = React.useState(userName);
@@ -7,32 +8,26 @@ export function Login({ userName, onLogin, onLogout }) {
   const [error, setError] = React.useState('');
   const navigate = useNavigate();
 
-  // Mock authentication: accounts are saved in localStorage for now
-  function getAccounts() {
-    return JSON.parse(localStorage.getItem('accounts') || '{}');
-  }
-
-  function loginUser(e) {
+  // The service checks the password and sets an auth cookie
+  async function loginUser(e) {
     e.preventDefault();
-    const accounts = getAccounts();
-    if (!accounts[name] || accounts[name] !== password) {
-      setError('Wrong username or password');
-      return;
+    try {
+      await loginAccount(name, password);
+      onLogin(name);
+      navigate('/dashboard');
+    } catch (err) {
+      setError(err.message);
     }
-    onLogin(name);
-    navigate('/dashboard');
   }
 
-  function createUser() {
-    const accounts = getAccounts();
-    if (accounts[name]) {
-      setError('That username is already taken');
-      return;
+  async function createUser() {
+    try {
+      await createAccount(name, password);
+      onLogin(name);
+      navigate('/dashboard');
+    } catch (err) {
+      setError(err.message);
     }
-    accounts[name] = password;
-    localStorage.setItem('accounts', JSON.stringify(accounts));
-    onLogin(name);
-    navigate('/dashboard');
   }
 
   function logoutUser() {

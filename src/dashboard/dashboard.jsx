@@ -1,14 +1,15 @@
 import React from 'react';
 import Modal from 'react-bootstrap/Modal';
-import { loadPets, savePets, loadEntries, saveEntries, fetchBreedInfo, breedNames } from '../petData';
+import { loadPets, addPet, loadEntries, addEntry, fetchBreedInfo, breedNames } from '../petData';
 
 const emptyPet = { name: '', species: 'Dog', breed: '', birthday: '', weight: '' };
 
-export function Dashboard({ userName }) {
-  const [pets, setPets] = React.useState(() => loadPets(userName));
-  const [entries, setEntries] = React.useState(() => loadEntries(userName));
-  const [petId, setPetId] = React.useState(() => loadPets(userName)[0]?.id || '');
+export function Dashboard({ userName, onLogout }) {
+  const [pets, setPets] = React.useState([]);
+  const [entries, setEntries] = React.useState([]);
+  const [petId, setPetId] = React.useState('');
   const [breedText, setBreedText] = React.useState('');
+  const [error, setError] = React.useState('');
 
   const [weight, setWeight] = React.useState('');
   const [meal, setMeal] = React.useState('');
@@ -22,16 +23,27 @@ export function Dashboard({ userName }) {
 
   const pet = pets.find((p) => p.id === petId);
 
-  // Save pets and entries whenever they change
-  React.useEffect(() => {
-    savePets(userName, pets);
-  }, [userName, pets]);
+  // If the service says we are not logged in, go back to the login page
+  function handleError(err) {
+    if (err.status === 401) {
+      onLogout();
+    } else {
+      setError(err.message);
+    }
+  }
 
+  // Load this user's pets and entries from the service
   React.useEffect(() => {
-    saveEntries(userName, entries);
-  }, [userName, entries]);
+    Promise.all([loadPets(), loadEntries()])
+      .then(([pets, entries]) => {
+        setPets(pets);
+        setEntries(entries);
+        setPetId(pets[0]?.id || '');
+      })
+      .catch(handleError);
+  }, []);
 
-  // Look up breed info (mock third-party API) when the selected pet changes
+  // Look up breed info when the selected pet changes. The service gets it from dogapi.dog.
   React.useEffect(() => {
     if (!pet || !pet.breed) {
       setBreedText(pet ? 'No breed entered for this pet.' : '');
@@ -67,31 +79,38 @@ export function Dashboard({ userName }) {
     setActivity((prev) => [{ id: Date.now() + Math.random(), message }, ...prev].slice(0, 6));
   }
 
-  function saveEntry(e) {
+  async function saveEntry(e) {
     e.preventDefault();
-    const entry = {
-      id: Date.now(),
-      petId: pet.id,
-      date: new Date().toLocaleDateString(),
-      weight,
-      meal,
-      calories,
-    };
-    setEntries([...entries, entry]);
-    setWeight('');
-    setMeal('');
-    setCalories('');
-    setSaved(`Saved entry for ${pet.name}!`);
-    addActivity(`You logged an entry for ${pet.name}`);
+    try {
+      const entry = await addEntry({
+        petId: pet.id,
+        date: new Date().toLocaleDateString(),
+        weight,
+        meal,
+        calories,
+      });
+      setEntries([...entries, entry]);
+      setWeight('');
+      setMeal('');
+      setCalories('');
+      setSaved(`Saved entry for ${pet.name}!`);
+      addActivity(`You logged an entry for ${pet.name}`);
+    } catch (err) {
+      handleError(err);
+    }
   }
 
-  function savePet(e) {
+  async function savePet(e) {
     e.preventDefault();
-    const pet = { ...newPet, id: String(Date.now()) };
-    setPets([...pets, pet]);
-    setPetId(pet.id);
-    setNewPet(emptyPet);
-    setShowAddPet(false);
+    try {
+      const pet = await addPet(newPet);
+      setPets([...pets, pet]);
+      setPetId(pet.id);
+      setNewPet(emptyPet);
+      setShowAddPet(false);
+    } catch (err) {
+      handleError(err);
+    }
   }
 
   function updateNewPet(field, value) {
@@ -109,6 +128,7 @@ export function Dashboard({ userName }) {
   return (
     <main className="container py-4">
       <p className="user-badge">Logged in as: <strong>{userName}</strong></p>
+      {error && <p className="text-danger">{error}</p>}
 
       <div className="dashboard-grid mt-3">
         {/* Left column */}
