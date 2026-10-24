@@ -1,10 +1,114 @@
 import React from 'react';
+import Modal from 'react-bootstrap/Modal';
+import { loadPets, savePets, loadEntries, saveEntries, fetchBreedInfo, breedNames } from '../petData';
 
-export function Dashboard() {
+const emptyPet = { name: '', species: 'Dog', breed: '', birthday: '', weight: '' };
+
+export function Dashboard({ userName }) {
+  const [pets, setPets] = React.useState(() => loadPets(userName));
+  const [entries, setEntries] = React.useState(() => loadEntries(userName));
+  const [petId, setPetId] = React.useState(() => loadPets(userName)[0]?.id || '');
+  const [breedText, setBreedText] = React.useState('');
+
+  const [weight, setWeight] = React.useState('');
+  const [meal, setMeal] = React.useState('');
+  const [calories, setCalories] = React.useState('');
+  const [saved, setSaved] = React.useState('');
+
+  const [showAddPet, setShowAddPet] = React.useState(false);
+  const [newPet, setNewPet] = React.useState(emptyPet);
+
+  const [activity, setActivity] = React.useState([]);
+
+  const pet = pets.find((p) => p.id === petId);
+
+  // Save pets and entries whenever they change
+  React.useEffect(() => {
+    savePets(userName, pets);
+  }, [userName, pets]);
+
+  React.useEffect(() => {
+    saveEntries(userName, entries);
+  }, [userName, entries]);
+
+  // Look up breed info (mock third-party API) when the selected pet changes
+  React.useEffect(() => {
+    if (!pet || !pet.breed) {
+      setBreedText(pet ? 'No breed entered for this pet.' : '');
+      return;
+    }
+    let active = true;
+    setBreedText('Loading breed info...');
+    fetchBreedInfo(pet.breed).then((info) => {
+      if (active) setBreedText(info);
+    });
+    return () => {
+      active = false;
+    };
+  }, [pet?.id, pet?.breed]);
+
+  // Mock WebSocket: other users' activity shows up every few seconds
+  React.useEffect(() => {
+    const animals = ['🐕 dog', '🐈 cat', '🐇 rabbit', '🐦 bird'];
+    const actions = ['a weight entry', 'a meal', 'their calories'];
+    const names = ['Sam', 'Ana', 'Jordan', 'Lee', 'Kai'];
+
+    const interval = setInterval(() => {
+      const who = names[Math.floor(Math.random() * names.length)];
+      const what = actions[Math.floor(Math.random() * actions.length)];
+      const animal = animals[Math.floor(Math.random() * animals.length)];
+      addActivity(`${who} just logged ${what} for their ${animal}`);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  function addActivity(message) {
+    setActivity((prev) => [{ id: Date.now() + Math.random(), message }, ...prev].slice(0, 6));
+  }
+
+  function saveEntry(e) {
+    e.preventDefault();
+    const entry = {
+      id: Date.now(),
+      petId: pet.id,
+      date: new Date().toLocaleDateString(),
+      weight,
+      meal,
+      calories,
+    };
+    setEntries([...entries, entry]);
+    setWeight('');
+    setMeal('');
+    setCalories('');
+    setSaved(`Saved entry for ${pet.name}!`);
+    addActivity(`You logged an entry for ${pet.name}`);
+  }
+
+  function savePet(e) {
+    e.preventDefault();
+    const pet = { ...newPet, id: String(Date.now()) };
+    setPets([...pets, pet]);
+    setPetId(pet.id);
+    setNewPet(emptyPet);
+    setShowAddPet(false);
+  }
+
+  function updateNewPet(field, value) {
+    setNewPet({ ...newPet, [field]: value });
+  }
+
+  // Today's summary for the selected pet
+  const today = new Date().toLocaleDateString();
+  const petEntries = entries.filter((entry) => entry.petId === petId);
+  const todayCalories = petEntries
+    .filter((entry) => entry.date === today)
+    .reduce((sum, entry) => sum + Number(entry.calories || 0), 0);
+  const latestWeight = [...petEntries].reverse().find((entry) => entry.weight)?.weight || pet?.weight;
+
   return (
     <main className="container py-4">
-      {/* Shows the logged-in user's name (authentication) */}
-      <p className="user-badge">Logged in as: <strong>username</strong></p>
+      <p className="user-badge">Logged in as: <strong>{userName}</strong></p>
 
       <div className="dashboard-grid mt-3">
         {/* Left column */}
@@ -13,114 +117,126 @@ export function Dashboard() {
             <h2 className="h4">Your Pet</h2>
             <label htmlFor="pet" className="form-label">Choose a pet</label>
             <div className="d-flex gap-2 mb-3">
-              <select id="pet" className="form-select">
-                <option>Bella (Dog)</option>
-                <option>Whiskers (Cat)</option>
+              <select id="pet" className="form-select" value={petId} onChange={(e) => setPetId(e.target.value)}>
+                {pets.length === 0 && <option value="">No pets yet</option>}
+                {pets.map((p) => (
+                  <option key={p.id} value={p.id}>{p.name} ({p.species})</option>
+                ))}
               </select>
-              <button type="button" className="btn btn-pv text-nowrap" data-bs-toggle="modal" data-bs-target="#addPetModal">
+              <button type="button" className="btn btn-pv text-nowrap" onClick={() => setShowAddPet(true)}>
                 + Add a Pet
               </button>
             </div>
 
-            {/* Third-party API placeholder: breed info from a public breed API */}
-            <h3 className="h5">Breed Info</h3>
-            <p className="breed-info mb-0">Labrador Retriever: typical weight 55–80 lbs (from breed API)</p>
+            {pet ? (
+              <>
+                <p className="mb-2">
+                  Today: <strong>{todayCalories}</strong> calories · Latest weight: <strong>{latestWeight || '—'}</strong> lbs
+                </p>
+                <h3 className="h5">Breed Info</h3>
+                <p className="breed-info mb-0">{breedText}</p>
+              </>
+            ) : (
+              <p className="mb-0">Add your first pet to start logging.</p>
+            )}
           </section>
 
-          {/* Application data: log a new entry */}
           <section className="pv-card">
             <h2 className="h4">Log Today</h2>
-            <form>
+            <form onSubmit={saveEntry}>
               <div className="row g-3">
                 <div className="col-12 col-sm-4">
                   <label htmlFor="weight" className="form-label">Weight (lbs)</label>
-                  <input type="number" id="weight" className="form-control" />
+                  <input type="number" id="weight" className="form-control" step="0.1" value={weight}
+                    onChange={(e) => { setWeight(e.target.value); setSaved(''); }} />
                 </div>
                 <div className="col-12 col-sm-4">
                   <label htmlFor="meal" className="form-label">Meal</label>
-                  <input type="text" id="meal" className="form-control" placeholder="1 cup dry food" />
+                  <input type="text" id="meal" className="form-control" placeholder="1 cup dry food" value={meal}
+                    onChange={(e) => { setMeal(e.target.value); setSaved(''); }} />
                 </div>
                 <div className="col-12 col-sm-4">
                   <label htmlFor="calories" className="form-label">Calories</label>
-                  <input type="number" id="calories" className="form-control" />
+                  <input type="number" id="calories" className="form-control" value={calories}
+                    onChange={(e) => { setCalories(e.target.value); setSaved(''); }} />
                 </div>
               </div>
-              <button type="submit" className="btn btn-pv mt-3">Save Entry</button>
+              <button type="submit" className="btn btn-pv mt-3" disabled={!pet || (!weight && !meal && !calories)}>
+                Save Entry
+              </button>
+              {saved && <span className="ms-3 text-success">{saved}</span>}
             </form>
           </section>
         </div>
 
-        {/* Right column: WebSocket placeholder, live updates from other users */}
+        {/* Right column: live updates from other users */}
         <section id="live-activity" className="pv-card">
           <h2 className="h4">Live Activity</h2>
           <ul className="list-unstyled mb-0">
-            <li>🐕 A user just logged a weight entry for their dog</li>
-            <li>🐈 A user just logged a meal for their cat</li>
+            {activity.length === 0 && <li>Waiting for activity...</li>}
+            {activity.map((item) => (
+              <li key={item.id}>{item.message}</li>
+            ))}
           </ul>
         </section>
       </div>
 
       {/* Add a Pet pop-up */}
-      <div className="modal fade" id="addPetModal" tabIndex="-1" aria-labelledby="addPetTitle" aria-hidden="true">
-        <div className="modal-dialog modal-dialog-centered">
-          <div className="modal-content">
-            <form>
-              <div className="modal-header">
-                <h2 className="modal-title h5" id="addPetTitle">Add a New Pet</h2>
-                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      <Modal show={showAddPet} onHide={() => setShowAddPet(false)} centered>
+        <form onSubmit={savePet}>
+          <Modal.Header closeButton>
+            <Modal.Title as="h2" className="h5">Add a New Pet</Modal.Title>
+          </Modal.Header>
+
+          <Modal.Body>
+            <div className="mb-3">
+              <label htmlFor="petName" className="form-label">Pet name</label>
+              <input type="text" id="petName" className="form-control" placeholder="Bella" required
+                value={newPet.name} onChange={(e) => updateNewPet('name', e.target.value)} />
+            </div>
+
+            <div className="mb-3">
+              <label htmlFor="species" className="form-label">Type of animal</label>
+              <select id="species" className="form-select" value={newPet.species}
+                onChange={(e) => updateNewPet('species', e.target.value)}>
+                <option>Dog</option>
+                <option>Cat</option>
+                <option>Rabbit</option>
+                <option>Bird</option>
+                <option>Reptile</option>
+                <option>Other / Exotic</option>
+              </select>
+            </div>
+
+            <div className="mb-3">
+              <label htmlFor="breed" className="form-label">Breed</label>
+              <input type="text" id="breed" className="form-control" list="breedList" placeholder="Start typing a breed..."
+                value={newPet.breed} onChange={(e) => updateNewPet('breed', e.target.value)} />
+              <datalist id="breedList">
+                {breedNames.map((b) => <option key={b} value={b}></option>)}
+              </datalist>
+            </div>
+
+            <div className="row g-3">
+              <div className="col-6">
+                <label htmlFor="birthday" className="form-label">Birthday</label>
+                <input type="date" id="birthday" className="form-control"
+                  value={newPet.birthday} onChange={(e) => updateNewPet('birthday', e.target.value)} />
               </div>
-
-              <div className="modal-body">
-                <div className="mb-3">
-                  <label htmlFor="petName" className="form-label">Pet name</label>
-                  <input type="text" id="petName" className="form-control" placeholder="Bella" required />
-                </div>
-
-                <div className="mb-3">
-                  <label htmlFor="species" className="form-label">Type of animal</label>
-                  <select id="species" className="form-select">
-                    <option>Dog</option>
-                    <option>Cat</option>
-                    <option>Rabbit</option>
-                    <option>Bird</option>
-                    <option>Reptile</option>
-                    <option>Other / Exotic</option>
-                  </select>
-                </div>
-
-                {/* Third-party API placeholder: breed list and ideal weight will come from a breed API */}
-                <div className="mb-3">
-                  <label htmlFor="breed" className="form-label">Breed</label>
-                  <input type="text" id="breed" className="form-control" list="breedList" placeholder="Start typing a breed..." />
-                  <datalist id="breedList">
-                    <option value="Labrador Retriever"></option>
-                    <option value="German Shepherd"></option>
-                    <option value="Siamese"></option>
-                    <option value="Holland Lop"></option>
-                  </datalist>
-                  <div className="form-text">Ideal weight range will load from the breed database.</div>
-                </div>
-
-                <div className="row g-3">
-                  <div className="col-6">
-                    <label htmlFor="birthday" className="form-label">Birthday</label>
-                    <input type="date" id="birthday" className="form-control" />
-                  </div>
-                  <div className="col-6">
-                    <label htmlFor="startWeight" className="form-label">Current weight (lbs)</label>
-                    <input type="number" id="startWeight" className="form-control" step="0.1" />
-                  </div>
-                </div>
+              <div className="col-6">
+                <label htmlFor="startWeight" className="form-label">Current weight (lbs)</label>
+                <input type="number" id="startWeight" className="form-control" step="0.1"
+                  value={newPet.weight} onChange={(e) => updateNewPet('weight', e.target.value)} />
               </div>
+            </div>
+          </Modal.Body>
 
-              <div className="modal-footer">
-                <button type="button" className="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" className="btn btn-pv">Save Pet</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
+          <Modal.Footer>
+            <button type="button" className="btn btn-outline-secondary" onClick={() => setShowAddPet(false)}>Cancel</button>
+            <button type="submit" className="btn btn-pv">Save Pet</button>
+          </Modal.Footer>
+        </form>
+      </Modal>
     </main>
   );
 }

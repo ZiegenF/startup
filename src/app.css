@@ -181,6 +181,26 @@ header {
   padding: 1rem;
 }
 
+.weight-chart {
+  width: 100%;
+  height: auto;
+}
+
+.weight-chart polyline {
+  fill: none;
+  stroke: var(--pv-teal);
+  stroke-width: 3;
+}
+
+.weight-chart circle {
+  fill: var(--pv-orange);
+}
+
+.weight-chart text {
+  font-size: 12px;
+  fill: var(--pv-text);
+}
+
 /* ----- About page (flexbox) ----- */
 .about-row {
   display: flex;
@@ -230,5 +250,10 @@ footer a {
 
   .hero h2 {
     font-size: 1.6rem;
+  }
+  #root {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
   }
 }

@@ -1,6 +1,46 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
-export function Login() {
+export function Login({ userName, onLogin, onLogout }) {
+  const [name, setName] = React.useState(userName);
+  const [password, setPassword] = React.useState('');
+  const [error, setError] = React.useState('');
+  const navigate = useNavigate();
+
+  // Mock authentication: accounts are saved in localStorage for now
+  function getAccounts() {
+    return JSON.parse(localStorage.getItem('accounts') || '{}');
+  }
+
+  function loginUser(e) {
+    e.preventDefault();
+    const accounts = getAccounts();
+    if (!accounts[name] || accounts[name] !== password) {
+      setError('Wrong username or password');
+      return;
+    }
+    onLogin(name);
+    navigate('/dashboard');
+  }
+
+  function createUser() {
+    const accounts = getAccounts();
+    if (accounts[name]) {
+      setError('That username is already taken');
+      return;
+    }
+    accounts[name] = password;
+    localStorage.setItem('accounts', JSON.stringify(accounts));
+    onLogin(name);
+    navigate('/dashboard');
+  }
+
+  function logoutUser() {
+    onLogout();
+    setName('');
+    setPassword('');
+  }
+
   return (
     <main className="container">
       <section className="hero">
@@ -11,24 +51,54 @@ export function Login() {
         </p>
       </section>
 
-      {/* Authentication placeholder: will connect to the backend later */}
       <div className="row justify-content-center">
         <div className="col-12 col-md-8 col-lg-5">
-          <form className="pv-card" method="get" action="/dashboard">
-            <h2 className="h4 mb-3">Login</h2>
-            <div className="mb-3">
-              <label htmlFor="username" className="form-label">Username</label>
-              <input type="text" id="username" className="form-control" placeholder="your@email.com" />
-            </div>
-            <div className="mb-3">
-              <label htmlFor="password" className="form-label">Password</label>
-              <input type="password" id="password" className="form-control" placeholder="password" />
-            </div>
-            <div className="d-flex gap-2">
-              <button type="submit" className="btn btn-pv flex-fill">Login</button>
-              <button type="submit" className="btn btn-outline-secondary flex-fill">Create account</button>
-            </div>
-          </form>
+          {userName ? (
+            <section className="pv-card text-center">
+              <h2 className="h4 mb-3">Welcome back, {userName}!</h2>
+              <div className="d-flex gap-2">
+                <button type="button" className="btn btn-pv flex-fill" onClick={() => navigate('/dashboard')}>
+                  Go to Dashboard
+                </button>
+                <button type="button" className="btn btn-outline-secondary flex-fill" onClick={logoutUser}>
+                  Logout
+                </button>
+              </div>
+            </section>
+          ) : (
+            <form className="pv-card" onSubmit={loginUser}>
+              <h2 className="h4 mb-3">Login</h2>
+              <div className="mb-3">
+                <label htmlFor="username" className="form-label">Username</label>
+                <input
+                  type="text"
+                  id="username"
+                  className="form-control"
+                  placeholder="your@email.com"
+                  value={name}
+                  onChange={(e) => { setName(e.target.value); setError(''); }}
+                />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="password" className="form-label">Password</label>
+                <input
+                  type="password"
+                  id="password"
+                  className="form-control"
+                  placeholder="password"
+                  value={password}
+                  onChange={(e) => { setPassword(e.target.value); setError(''); }}
+                />
+              </div>
+              {error && <p className="text-danger">{error}</p>}
+              <div className="d-flex gap-2">
+                <button type="submit" className="btn btn-pv flex-fill" disabled={!name || !password}>Login</button>
+                <button type="button" className="btn btn-outline-secondary flex-fill" disabled={!name || !password} onClick={createUser}>
+                  Create account
+                </button>
+              </div>
+            </form>
+          )}
         </div>
       </div>
     </main>

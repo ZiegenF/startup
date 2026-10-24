@@ -1,15 +1,28 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import './app.css';
 
-import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, NavLink, Navigate, Route, Routes } from 'react-router-dom';
 import { Login } from './login/login';
 import { Dashboard } from './dashboard/dashboard';
 import { History } from './history/history';
 import { About } from './about/about';
 
 export default function App() {
+  // Logged in user is kept in localStorage until we have a real backend
+  const [userName, setUserName] = React.useState(localStorage.getItem('userName') || '');
+  const loggedIn = userName !== '';
+
+  function login(name) {
+    localStorage.setItem('userName', name);
+    setUserName(name);
+  }
+
+  function logout() {
+    localStorage.removeItem('userName');
+    setUserName('');
+  }
+
   return (
     <BrowserRouter>
       <header>
@@ -17,17 +30,17 @@ export default function App() {
           <h1 className="logo">PetVitals 🐾</h1>
           <nav className="site-nav">
             <NavLink to="/" end>Home</NavLink>
-            <NavLink to="/dashboard">Dashboard</NavLink>
-            <NavLink to="/history">History</NavLink>
+            {loggedIn && <NavLink to="/dashboard">Dashboard</NavLink>}
+            {loggedIn && <NavLink to="/history">History</NavLink>}
             <NavLink to="/about">About</NavLink>
           </nav>
         </div>
       </header>
 
       <Routes>
-        <Route path="/" element={<Login />} exact />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/history" element={<History />} />
+        <Route path="/" element={<Login userName={userName} onLogin={login} onLogout={logout} />} />
+        <Route path="/dashboard" element={loggedIn ? <Dashboard userName={userName} /> : <Navigate to="/" />} />
+        <Route path="/history" element={loggedIn ? <History userName={userName} /> : <Navigate to="/" />} />
         <Route path="/about" element={<About />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
