@@ -131,14 +131,14 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] I completed the prerequisites for this deliverable (Simon deployed, GitHub link, Git commits)
-- [ ] **Node.js/Express HTTP service** - I did not complete this part of the deliverable.
-- [ ] **Static middleware for frontend** - I did not complete this part of the deliverable.
-- [ ] **Calls to third party endpoints** - I did not complete this part of the deliverable.
-- [ ] **Backend service endpoints** - I did not complete this part of the deliverable.
-- [ ] **Frontend calls service endpoints** - I did not complete this part of the deliverable.
-- [ ] **Supports registration, login, logout, and restricted endpoint** - I did not complete this part of the deliverable.
-- [ ] **Uses BCrypt to hash passwords** - I did not complete this part of the deliverable.
+- [x] I completed the prerequisites for this deliverable (Simon deployed, GitHub link, Git commits) - The home page has a "View the code on GitHub" link, and I committed my work in small steps.
+- [x] **Node.js/Express HTTP service** - The backend is in `service/index.js`. It uses Express 5 and listens on port 4000. On my server it runs with pm2, and Caddy forwards startup.ziegencs260.click to it. It is deployed with `deployService.sh`.
+- [x] **Static middleware for frontend** - `app.use(express.static('public'))` serves the built React app. Any path that isn't an API call gets `index.html`, so React Router still works when you refresh a page like /dashboard.
+- [x] **Calls to third party endpoints** - `GET /api/breed?name=...` calls [Dog API](https://dogapi.dog) to get a breed's description, weight range, and life span. The service loads the breed list once and keeps it cached. The dashboard shows this info for the selected pet.
+- [x] **Backend service endpoints** - `POST /api/auth/create`, `POST /api/auth/login`, `DELETE /api/auth/logout`, `GET/POST /api/pets`, `GET/POST /api/entries`, and `GET /api/breed`. For now the data is stored in memory, and it will move to MongoDB in the DB deliverable.
+- [x] **Frontend calls service endpoints** - `src/petData.js` has the `fetch` calls. Login and create account call the auth endpoints, the dashboard loads and saves pets and log entries, and the history page loads entries from the service. In development, `vite.config.js` proxies `/api` to port 4000.
+- [x] **Supports registration, login, logout, and restricted endpoint** - Creating an account or logging in sets an httpOnly auth cookie with a random token. The pets, entries, and breed endpoints use a `verifyAuth` middleware that returns 401 if you aren't logged in. If the frontend gets a 401, it logs you out and sends you back to the login page. Logout deletes the token on the server and clears the cookie.
+- [x] **Uses BCrypt to hash passwords** - Passwords are hashed with `bcryptjs` before they're stored, and login checks them with `bcrypt.compare`. The plain password is never saved.
 
 ## 🚀 DB deliverable
 
