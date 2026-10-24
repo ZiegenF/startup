@@ -116,9 +116,16 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] I completed the prerequisites for this deliverable (Simon deployed, GitHub link, Git commits)
-- [ ] **All functionality implemented or mocked out** - I did not complete this part of the deliverable.
-- [ ] **Hooks** - I did not complete this part of the deliverable.
+- [x] I completed the prerequisites for this deliverable (Simon deployed, GitHub link, Git commits) - Simon React is deployed to simon.ziegencs260.click, the home page has a "View the code on GitHub" link, and I committed my work in small steps.
+- [x] **All functionality implemented or mocked out** - Everything works on the frontend now. The parts that will need the backend are mocked out:
+  - **Login** - You can create an account and log in with a username and password. Accounts are stored in localStorage for now. Once you log in, the Dashboard and History links show up in the nav, and the header badge shows your username. The home page shows a Logout button when you are logged in. If you go to /dashboard or /history without logging in, it sends you back to the home page.
+  - **Database (mocked with localStorage)** - Pets and log entries are saved in localStorage under each user's name, so each user only sees their own pets. The helper functions are in `src/petData.js` so they will be easy to swap for service calls later.
+  - **Add a pet** - The "+ Add a Pet" pop-up uses a React Bootstrap Modal. Saving it adds the pet to the dropdown and selects it.
+  - **Log entries** - The Log Today form saves a weight, meal, and calories for the selected pet. The dashboard shows today's calorie total and the latest weight.
+  - **History** - The history table shows the selected pet's real entries, and you can switch pets with a dropdown. The weight trend chart is an SVG line chart drawn from the logged weights.
+  - **3rd party API (mocked)** - Breed info is loaded by `fetchBreedInfo`, which returns a promise after a short delay like a real API call. It shows "Loading breed info..." first and then the result.
+  - **WebSocket (mocked)** - The Live Activity list gets a new fake message from another user every 5 seconds with `setInterval`. Your own saved entries also show up in the list.
+- [x] **Hooks** - I used `useState` for the logged-in user, form inputs, pets, entries, the modal, and the activity list. I used `useEffect` to save pets and entries to localStorage when they change, to load breed info when the selected pet changes, and to start and clean up the activity interval. I also used `useNavigate` from React Router to go to the dashboard after login.
 
 ## 🚀 Service deliverable
 
